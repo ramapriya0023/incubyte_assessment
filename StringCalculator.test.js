@@ -79,3 +79,24 @@ describe("StringCalculator with number limit checks", () => {
     expect(StringCalculator.add("//;\n1;2;1001")).toBe(3);
   });
 });
+
+describe("StringCalculator with multi-length delimiters", () => {
+  test("should handle multi-character delimiter", () => {
+    expect(StringCalculator.add("//[**]\n1**2**3")).toBe(6);
+  });
+
+  test("should handle different multi-character delimiters", () => {
+    expect(StringCalculator.add("//[##]\n2##3##4")).toBe(9);
+    expect(StringCalculator.add("//[--]\n5--10--15")).toBe(30);
+  });
+
+  test("should throw an error for negative numbers with custom delimiter", () => {
+    expect(() => StringCalculator.add("//[##]\n2##-3##4")).toThrow(
+      "negatives not allowed: -3"
+    );
+  });
+
+  test("should ignore numbers larger than 1000 with multi-length delimiter", () => {
+    expect(StringCalculator.add("//[**]\n2**1001**3")).toBe(5);
+  });
+});
