@@ -23,7 +23,7 @@ const StringCalculator = (() => {
       if (num < 0) {
         negativeValues.push(num);
       }
-      return acc + num;
+      return num > 1000 ? acc : acc + num;
     }, 0);
 
     if (negativeValues.length > 0) {

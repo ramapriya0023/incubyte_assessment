@@ -61,3 +61,21 @@ describe("StringCalculator with negative number checks", () => {
     );
   });
 });
+
+describe("StringCalculator with number limit checks", () => {
+  test("should ignore a single number greater than 1000", () => {
+    expect(StringCalculator.add("2,1001")).toBe(2);
+  });
+
+  test("should return the sum of numbers less than or equal to 1000", () => {
+    expect(StringCalculator.add("1000,1001")).toBe(1000);
+  });
+
+  test("should sum multiple numbers, ignoring those greater than 1000", () => {
+    expect(StringCalculator.add("1,2,3,1001")).toBe(6);
+  });
+
+  test("should sum numbers using a custom delimiter, ignoring those greater than 1000", () => {
+    expect(StringCalculator.add("//;\n1;2;1001")).toBe(3);
+  });
+});
