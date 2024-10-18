@@ -33,3 +33,11 @@ describe("StringCalculator basic add tests", () => {
     expect(StringCalculator.add("7,8\n9")).toBe(24);
   });
 });
+
+describe("StringCalculator with custom delimiters", () => {
+  test("should return the sum using a custom delimiter", () => {
+    expect(StringCalculator.add("//;\n1;2")).toBe(3);
+    expect(StringCalculator.add("//|\n1|2|3")).toBe(6);
+    expect(StringCalculator.add("//,\n4,5\n6")).toBe(15);
+  });
+});
