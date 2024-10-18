@@ -1,32 +1,36 @@
 const StringCalculator = (() => {
   const extractDelimiter = (input) => {
-    let delimiter = ",";
+    let delimiters = [","];
     let numbers = input;
-    // "//[##]\n2##-3##4"
+    //"//[*][%]\n1*2%3"
     if (input.startsWith("//")) {
       const delimiterEndIndex = input.indexOf("\n");
       const delimiterToIdentify = input.substring(2, delimiterEndIndex);
 
-      const delimiterMatch = delimiterToIdentify.match(/\[(.+?)\]/);
-      if (delimiterMatch) {
-        delimiter = delimiterMatch[1];
+      const delimiterMatches = delimiterToIdentify.match(/\[(.+?)\]/g);
+      if (delimiterMatches) {
+        delimiters = delimiterMatches.map((delim) => delim.slice(1, -1));
       } else {
-        delimiter = delimiterToIdentify;
+        delimiters = [delimiterToIdentify];
       }
 
       numbers = input.substring(delimiterEndIndex + 1);
     }
 
-    return { delimiter, numbers };
+    return { delimiters, numbers };
   };
 
   const add = (input) => {
     if (input === "") return 0;
 
-    const { delimiter, numbers } = extractDelimiter(input);
+    const { delimiters, numbers } = extractDelimiter(input);
 
-    const escapedDelimiter = delimiter.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
-    const numberArray = numbers.split(new RegExp(`${escapedDelimiter}|\n`));
+    const escapedDelimiters = delimiters.map((delim) =>
+      delim.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
+    );
+    const delimiterRegex = new RegExp(escapedDelimiters.join("|") + "|\n");
+
+    const numberArray = numbers.split(delimiterRegex);
 
     const negativeValues = [];
     const sum = numberArray.reduce((acc, curr) => {
