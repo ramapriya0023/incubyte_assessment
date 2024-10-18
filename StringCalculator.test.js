@@ -100,3 +100,17 @@ describe("StringCalculator with multi-length delimiters", () => {
     expect(StringCalculator.add("//[**]\n2**1001**3")).toBe(5);
   });
 });
+
+describe("StringCalculator with multiple delimiters", () => {
+  test("should handle multiple single-character delimiters", () => {
+    expect(StringCalculator.add("//[*][%]\n1*2%3")).toBe(6);
+  });
+
+  test("should handle multiple multi-character delimiters", () => {
+    expect(StringCalculator.add("//[***][%%%]\n1***2%%%3")).toBe(6);
+  });
+
+  test("should handle multiple delimiters and ignore numbers greater than 1000", () => {
+    expect(StringCalculator.add("//[*][%]\n1*2000%3")).toBe(4);
+  });
+});
