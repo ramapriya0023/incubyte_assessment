@@ -41,3 +41,23 @@ describe("StringCalculator with custom delimiters", () => {
     expect(StringCalculator.add("//,\n4,5\n6")).toBe(15);
   });
 });
+
+describe("StringCalculator with negative number checks", () => {
+  test("should throw an error for a single negative number", () => {
+    expect(() => StringCalculator.add("//;\n1;2;-3")).toThrow(
+      "negatives not allowed: -3"
+    );
+  });
+
+  test("should throw an error for multiple negative numbers", () => {
+    expect(() => StringCalculator.add("//;\n-1;2;-3")).toThrow(
+      "negatives not allowed: -1, -3"
+    );
+  });
+
+  test("should throw an error for mixed positive and negative numbers", () => {
+    expect(() => StringCalculator.add("//;\n1;-2;3;-4")).toThrow(
+      "negatives not allowed: -2, -4"
+    );
+  });
+});
