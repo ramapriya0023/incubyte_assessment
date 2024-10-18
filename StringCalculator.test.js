@@ -113,4 +113,8 @@ describe("StringCalculator with multiple delimiters", () => {
   test("should handle multiple delimiters and ignore numbers greater than 1000", () => {
     expect(StringCalculator.add("//[*][%]\n1*2000%3")).toBe(4);
   });
+
+  test("should handle mixed single and multi-character delimiters", () => {
+    expect(StringCalculator.add("//[*][%%][###]\n1*2%%3###4")).toBe(10);
+  });
 });
