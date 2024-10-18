@@ -15,7 +15,21 @@ const StringCalculator = (() => {
     const { delimiter, numbers } = extractDelimiter(input);
 
     const numberArray = numbers.split(new RegExp(`[${delimiter}\n]`));
-    const sum = numberArray.reduce((acc, curr) => acc + parseInt(curr, 10), 0);
+
+    const negativeValues = [];
+
+    const sum = numberArray.reduce((acc, curr) => {
+      const num = parseInt(curr, 10);
+      if (num < 0) {
+        negativeValues.push(num);
+      }
+      return acc + num;
+    }, 0);
+
+    if (negativeValues.length > 0) {
+      throw new Error(`negatives not allowed: ${negativeValues.join(", ")}`);
+    }
+
     return sum;
   };
 
