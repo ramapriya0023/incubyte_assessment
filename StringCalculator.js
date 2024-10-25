@@ -2,7 +2,6 @@ const StringCalculator = (() => {
   const extractDelimiter = (input) => {
     let delimiters = [","];
     let numbers = input;
-    //"//[*][%]\n1*2%3"
     if (input.startsWith("//")) {
       const delimiterEndIndex = input.indexOf("\n");
       const delimiterToIdentify = input.substring(2, delimiterEndIndex);
@@ -20,11 +19,30 @@ const StringCalculator = (() => {
     return { delimiters, numbers };
   };
 
+  const findSum = (numberArray) => {
+    return numberArray.reduce((acc, curr) => {
+      const num = parseInt(curr, 10);
+      if (isNaN(num)) return acc;
+      return num > 1000 ? acc : acc + num;
+    }, 0);
+  };
+
+  const findProduct = (numberArray) => {
+    return numberArray.reduce((acc, curr) => {
+      const num = parseInt(curr, 10);
+      if (isNaN(num)) return acc;
+      return num > 1000 ? acc : acc * num;
+    }, 1);
+  };
+
   const add = (input) => {
+    let operation = "add";
     if (input === "") return 0;
 
     const { delimiters, numbers } = extractDelimiter(input);
-
+    if (delimiters.length === 1 && delimiters[0] === "*") {
+      operation = "multiply";
+    }
     const escapedDelimiters = delimiters.map((delim) =>
       delim.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
     );
@@ -32,21 +50,16 @@ const StringCalculator = (() => {
 
     const numberArray = numbers.split(delimiterRegex);
 
-    const negativeValues = [];
-    const sum = numberArray.reduce((acc, curr) => {
-      const num = parseInt(curr, 10);
-      if (isNaN(num)) return acc;
-      if (num < 0) {
-        negativeValues.push(num);
-      }
-      return num > 1000 ? acc : acc + num;
-    }, 0);
+    const negativeValues = numberArray.filter((number) => number < 0);
 
     if (negativeValues.length > 0) {
       throw new Error(`negatives not allowed: ${negativeValues.join(", ")}`);
     }
 
-    return sum;
+    const result =
+      operation === "add" ? findSum(numberArray) : findProduct(numberArray);
+
+    return result;
   };
 
   return { add };
